@@ -1,18 +1,26 @@
 from flask import Flask,request, render_template
 import numpy as np
 import pickle
+import pandas as pd
 import sklearn
 print(sklearn.__version__)
+
 #loading models
 dtr = pickle.load(open('dtr.pkl','rb'))
 preprocessor = pickle.load(open('preprocessor.pkl','rb'))
+
+#load data for dropdowns
+df = pd.read_csv('yield_df.csv')
+areas = sorted(df['Area'].unique())
+items = sorted(df['Item'].unique())
 
 #flask app
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', areas=areas, items=items)
+
 @app.route("/predict",methods=['POST'])
 def predict():
     if request.method == 'POST':
@@ -27,7 +35,7 @@ def predict():
         transformed_features = preprocessor.transform(features)
         prediction = dtr.predict(transformed_features).reshape(1,-1)
 
-        return render_template('index.html',prediction = prediction[0][0])
+        return render_template('index.html', prediction=prediction[0][0], areas=areas, items=items)
 
 if __name__=="__main__":
     app.run(debug=True)
