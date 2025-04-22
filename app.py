@@ -5,7 +5,7 @@ import sklearn
 print(sklearn.__version__)
 #loading models
 dtr = pickle.load(open('dtr.pkl','rb'))
-preprocessor = pickle.load(open('preprocessor.pkl','rb'))
+preprocessor = pickle.load(open('preprocesser.pkl','rb'))
 
 #flask app
 app = Flask(__name__)
